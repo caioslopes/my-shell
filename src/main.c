@@ -7,11 +7,17 @@ int main(){
 
     while (true){
         prompt(&command, args);
-        if(fork() != 0){
-            waitpid(-1, &status, 0);
-        }else{
-            exec_command(&command, args);
-        }
+
+        if(strcmp(&(*command), "exit") == 0){
+            exit(EXIT_SUCCESS);
+        } else{
+            if(fork() != 0){
+                waitpid(-1, &status, 0);
+            }else{
+                read_command(&command, args);
+            }
+        }      
+
     }
     
     return 0;
@@ -38,30 +44,12 @@ void prompt(char **command, char **args[]){
     args[count] = NULL;
 }
 
-void exec_command(char **command, char **args[]){
+void read_command(char **command, char **args[]){
+
+   
     execvp(*command, args);
     perror("execvp");
-}
+    
 
-char* get_username(){
-    char* user;
-    struct passwd *pwd = getpwuid(getuid());
-    if (pwd)
-        user = pwd->pw_name;
-    else
-        strcpy(user, "(?)");
-    return user;
-}
-
-char* get_userhost(){
-    char host[256];
-    int hostid;
-    hostid = gethostname(host, sizeof(host));
-    return host;
-}
-
-struct tm* get_time(){
-    time_t now = time(NULL);
-    struct tm *tm_struct = localtime(&now);
-    return tm_struct;
+    
 }
