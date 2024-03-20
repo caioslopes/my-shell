@@ -3,11 +3,17 @@
 int main(){
     char *command;
     char *args[MAX_LINE];
+    int status;
 
-    type_prompt(&command, args);
+    while (true){
+        type_prompt(&command, args);
+        if(fork() != 0){
+            waitpid(-1, &status, 0);
+        }else{
+            read_command(&command, args);
+        }
+    }
     
-    read_command(&command, args);
-
     return 0;
 }
 
@@ -34,5 +40,5 @@ void type_prompt(char **command, char **args[]){
 
 void read_command(char **command, char **args[]){
     execvp(*command, args);
-    perror("execvp");
+    perror("execve");
 }
