@@ -11,7 +11,7 @@
 
 void prompt(char **command, char **args[]);
 
-void exec_command(char **command, char **args[]);
+void read_command(char **command, char **args[]);
 
 char* get_username();
 

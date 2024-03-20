@@ -16,8 +16,7 @@ int main(){
             }else{
                 read_command(&command, args);
             }
-        }      
-
+        }
     }
     
     return 0;
@@ -45,11 +44,29 @@ void prompt(char **command, char **args[]){
 }
 
 void read_command(char **command, char **args[]){
-
-   
     execvp(*command, args);
-    perror("execvp");
-    
+    perror("execvp");    
+}
 
-    
+char* get_username(){
+    char* user;
+    struct passwd *pwd = getpwuid(getuid());
+    if (pwd)
+        user = pwd->pw_name;
+    else
+        strcpy(user, "(?)");
+    return user;
+}
+
+char* get_userhost(){
+    char host[256];
+    int hostid;
+    hostid = gethostname(host, sizeof(host));
+    return host;
+}
+
+struct tm* get_time(){
+    time_t now = time(NULL);
+    struct tm *tm_struct = localtime(&now);
+    return tm_struct;
 }
