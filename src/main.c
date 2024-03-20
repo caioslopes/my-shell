@@ -6,7 +6,7 @@ int main(){
     int status;
 
     while (true){
-        type_prompt(&command, args);
+        prompt(&command, args);
         if(fork() != 0){
             waitpid(-1, &status, 0);
         }else{
@@ -17,11 +17,28 @@ int main(){
     return 0;
 }
 
-void type_prompt(char **command, char **args[]){
+void prompt(char **command, char **args[]){
     char *token, string[MAX_LINE];
     int count = 0;
 
-    printf("Digite um comando shell: \n");
+    /* Username */
+    char *user;
+    user = (char *)malloc(10*sizeof(char));
+    user = getlogin(); 
+
+    /* Hostname */
+    char host[256];
+    int hostid;
+    hostid = gethostname(host, sizeof(host));
+
+    /* LocalTime */
+    time_t now = time(NULL);
+    struct tm *tm_struct = localtime(&now);
+    int hour = tm_struct->tm_hour;
+    int min = tm_struct->tm_min;
+    int sec = tm_struct->tm_sec;
+
+    printf("%s@%s[%d:%d:%d] $ ", user,host,hour,min,sec);
     fgets(string, MAX_LINE, stdin);
 
     string[strcspn(string, "\n")] = 0;
@@ -40,5 +57,5 @@ void type_prompt(char **command, char **args[]){
 
 void read_command(char **command, char **args[]){
     execvp(*command, args);
-    perror("execve");
+    perror("execvp");
 }
