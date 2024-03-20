@@ -10,7 +10,7 @@ int main(){
         if(fork() != 0){
             waitpid(-1, &status, 0);
         }else{
-            read_command(&command, args);
+            exec_command(&command, args);
         }
     }
     
@@ -21,24 +21,7 @@ void prompt(char **command, char **args[]){
     char *token, string[MAX_LINE];
     int count = 0;
 
-    /* Username */
-    char *user;
-    user = (char *)malloc(10*sizeof(char));
-    user = getlogin(); 
-
-    /* Hostname */
-    char host[256];
-    int hostid;
-    hostid = gethostname(host, sizeof(host));
-
-    /* LocalTime */
-    time_t now = time(NULL);
-    struct tm *tm_struct = localtime(&now);
-    int hour = tm_struct->tm_hour;
-    int min = tm_struct->tm_min;
-    int sec = tm_struct->tm_sec;
-
-    printf("%s@%s[%d:%d:%d] $ ", user,host,hour,min,sec);
+    printf("%s@%s[%d:%d:%d] $ ",get_username(),get_userhost(),get_time()->tm_hour,get_time()->tm_min,get_time()->tm_sec);
     fgets(string, MAX_LINE, stdin);
 
     string[strcspn(string, "\n")] = 0;
@@ -55,7 +38,30 @@ void prompt(char **command, char **args[]){
     args[count] = NULL;
 }
 
-void read_command(char **command, char **args[]){
+void exec_command(char **command, char **args[]){
     execvp(*command, args);
     perror("execvp");
+}
+
+char* get_username(){
+    char* user;
+    struct passwd *pwd = getpwuid(getuid());
+    if (pwd)
+        user = pwd->pw_name;
+    else
+        strcpy(user, "(?)");
+    return user;
+}
+
+char* get_userhost(){
+    char host[256];
+    int hostid;
+    hostid = gethostname(host, sizeof(host));
+    return host;
+}
+
+struct tm* get_time(){
+    time_t now = time(NULL);
+    struct tm *tm_struct = localtime(&now);
+    return tm_struct;
 }
