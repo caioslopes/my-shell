@@ -7,11 +7,17 @@ int main(){
 
     while (true){
         prompt(&command, args);
-        if(fork() != 0){
-            waitpid(-1, &status, 0);
-        }else{
-            read_command(&command, args);
-        }
+
+        if(strcmp(&(*command), "exit") == 0){
+            exit(EXIT_SUCCESS);
+        } else{
+            if(fork() != 0){
+                waitpid(-1, &status, 0);
+            }else{
+                read_command(&command, args);
+            }
+        }      
+
     }
     
     return 0;
@@ -56,6 +62,11 @@ void prompt(char **command, char **args[]){
 }
 
 void read_command(char **command, char **args[]){
+
+   
     execvp(*command, args);
     perror("execvp");
+    
+
+    
 }
