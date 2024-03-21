@@ -2,8 +2,9 @@
 
 struct machine{
     char *username;
-    char hostname[1024];
+    char hostname[MAX_LINE];
     struct tm *time;
+    char *dir;
 };
 
 int main(){
@@ -12,7 +13,7 @@ int main(){
     m = malloc(sizeof(struct machine));
 
     /* Command and Args */
-    char *command;
+    char *command = malloc(sizeof(char)*MAX_LINE);
     char *args[MAX_LINE];
     int status;
 
@@ -20,23 +21,19 @@ int main(){
     get_username(m);
 
     while (true){
-        prompt(&command, args, m);
-
-        if(strcmp(&(*command), "exit") == 0){
-            exit(EXIT_SUCCESS);
-        } else{
-            if(fork() != 0){
-                waitpid(-1, &status, 0);
-            }else{
-                read_command(&command, args, m);
-            }
+        prompt(command, args, m);
+        interns(command, args);
+        if(fork() != 0){
+            waitpid(-1, &status, 0);
+        }else{
+            read_command(command, args);
         }
     }
     
     return 0;
 }
 
-void prompt(char **command, char *args[], Machine m){
+void prompt(char *command, char *args[], Machine m){
     char *token, string[MAX_LINE];
     int count = 0;
 
@@ -44,24 +41,28 @@ void prompt(char **command, char *args[], Machine m){
 
     printf("%s@%s[%d:%d:%d] $ ", m->username, m->hostname,m->time->tm_hour, m->time->tm_min, m->time->tm_sec);
     fgets(string, MAX_LINE, stdin);
+    fflush(stdin);
 
     string[strcspn(string, "\n")] = 0;
 
     token = strtok(string, " ");
     do {
-        if (count == 0) {
-            *command = token;
-        }
         args[count] = (char*) token;
         count++;
     } while ((token = strtok(NULL, " ")));
 
     args[count] = NULL;
+    strcpy(command, args[0]);
 }
 
-void read_command(char **command, char *args[], Machine m){
-    execvp(*command, args);
-    perror("execvp");    
+void read_command(char *command, char *args[]){
+    execvp(command, args);
+    perror("execvp");
+}
+
+void interns(char *command, char *args[]){
+    if(!strcmp(command, "exit")) { _exit(0); }
+    if(!strcmp(command, "cd")) { chdir(*args); }
 }
 
 void get_username(Machine m){
