@@ -1,12 +1,26 @@
 #include "shell.h"
 
+struct machine{
+    char *username;
+    char hostname[1024];
+    struct tm *time;
+};
+
 int main(){
+    /* Machine info */
+    Machine m;
+    m = malloc(sizeof(struct machine));
+
+    /* Command and Args */
     char *command;
     char *args[MAX_LINE];
     int status;
 
+    get_userhost(m);
+    get_username(m);
+
     while (true){
-        prompt(&command, args);
+        prompt(&command, args, m);
 
         if(strcmp(&(*command), "exit") == 0){
             exit(EXIT_SUCCESS);
@@ -14,7 +28,7 @@ int main(){
             if(fork() != 0){
                 waitpid(-1, &status, 0);
             }else{
-                read_command(&command, args);
+                read_command(&command, args, m);
             }
         }
     }
@@ -22,11 +36,13 @@ int main(){
     return 0;
 }
 
-void prompt(char **command, char **args[]){
+void prompt(char **command, char *args[], Machine m){
     char *token, string[MAX_LINE];
     int count = 0;
 
-    printf("%s@%s[%d:%d:%d] $ ",get_username(),get_userhost(),get_time()->tm_hour,get_time()->tm_min,get_time()->tm_sec);
+    get_time(m);
+
+    printf("%s@%s[%d:%d:%d] $ ", m->username, m->hostname,m->time->tm_hour, m->time->tm_min, m->time->tm_sec);
     fgets(string, MAX_LINE, stdin);
 
     string[strcspn(string, "\n")] = 0;
@@ -36,37 +52,34 @@ void prompt(char **command, char **args[]){
         if (count == 0) {
             *command = token;
         }
-        args[count] = (char**) token;
+        args[count] = (char*) token;
         count++;
     } while ((token = strtok(NULL, " ")));
 
     args[count] = NULL;
 }
 
-void read_command(char **command, char **args[]){
+void read_command(char **command, char *args[], Machine m){
     execvp(*command, args);
     perror("execvp");    
 }
 
-char* get_username(){
+void get_username(Machine m){
     char* user;
     struct passwd *pwd = getpwuid(getuid());
     if (pwd)
-        user = pwd->pw_name;
+        m->username = pwd->pw_name;
     else
-        strcpy(user, "(?)");
-    return user;
+        strcpy(m->username, "(?)");
 }
 
-char* get_userhost(){
-    char host[256];
+void get_userhost(Machine machine){
     int hostid;
-    hostid = gethostname(host, sizeof(host));
-    return host;
+    hostid = gethostname(machine->hostname, sizeof(machine->hostname));
 }
 
-struct tm* get_time(){
+void get_time(Machine m){
     time_t now = time(NULL);
     struct tm *tm_struct = localtime(&now);
-    return tm_struct;
+    m->time = tm_struct;
 }

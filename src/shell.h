@@ -9,12 +9,14 @@
 
 #define MAX_LINE 1000
 
-void prompt(char **command, char **args[]);
+typedef struct machine* Machine;
 
-void read_command(char **command, char **args[]);
+void prompt(char **command, char *args[], Machine m);
 
-char* get_username();
+void read_command(char **command, char *args[], Machine m);
 
-char* get_userhost();
+void get_username(Machine m);
 
-struct tm* get_time();
+void get_userhost(Machine m);
+
+void get_time(Machine m);
