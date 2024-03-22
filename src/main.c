@@ -59,8 +59,9 @@ void prompt(char *command, char *args[], Machine m){
 }
 
 void read_command(char *command, char *args[]){
-    execvp(command, args);
-    perror("execvp");
+    if(!execvp(command, args))
+        perror("execvp");
+        _exit(0);
 }
 
 bool interns(char *command, char *args[]){
