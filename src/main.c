@@ -38,8 +38,9 @@ void prompt(char *command, char *args[], Machine m){
     int count = 0;
 
     get_time(m);
+    get_dir(m);
 
-    printf("%s@%s[%d:%d:%d] $ ", m->username, m->hostname,m->time->tm_hour, m->time->tm_min, m->time->tm_sec);
+    printf("%s@%s[%d:%d:%d] %s $ ", m->username, m->hostname,m->time->tm_hour, m->time->tm_min, m->time->tm_sec, m->dir);
     fgets(string, MAX_LINE, stdin);
     fflush(stdin);
 
@@ -47,7 +48,8 @@ void prompt(char *command, char *args[], Machine m){
 
     token = strtok(string, " ");
     do {
-        args[count] = (char*) token;
+        args[count] = malloc(sizeof(char)*MAX_LINE);
+        snprintf(args[count], MAX_LINE, "%s", token);
         count++;
     } while ((token = strtok(NULL, " ")));
 
@@ -62,7 +64,7 @@ void read_command(char *command, char *args[]){
 
 void interns(char *command, char *args[]){
     if(!strcmp(command, "exit")) { _exit(0); }
-    if(!strcmp(command, "cd")) { chdir(*args); }
+    if(!strcmp(command, "cd")) { chdir(args[1]); }
 }
 
 void get_username(Machine m){
@@ -83,4 +85,16 @@ void get_time(Machine m){
     time_t now = time(NULL);
     struct tm *tm_struct = localtime(&now);
     m->time = tm_struct;
+}
+
+void get_dir(Machine m){
+    char *token, cwd[MAX_LINE];
+    m->dir = malloc(sizeof(char)*MAX_LINE);
+
+    getcwd(cwd, (sizeof(cwd)));
+
+    token = strtok(cwd, "/");
+    do {
+        snprintf(m->dir, MAX_LINE, "%s", token);
+    } while ((token = strtok(NULL, "/")));
 }

@@ -22,3 +22,5 @@ void get_username(Machine m);
 void get_userhost(Machine m);
 
 void get_time(Machine m);
+
+void get_dir(Machine m);
