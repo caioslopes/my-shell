@@ -15,7 +15,7 @@ void prompt(char *command, char *args[], Machine m);
 
 void read_command(char *command, char *args[]);
 
-void interns(char *command, char *args[]);
+bool interns(char *command, char *args[]);
 
 void get_username(Machine m);
 

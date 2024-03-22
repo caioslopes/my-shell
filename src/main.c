@@ -22,12 +22,13 @@ int main(){
 
     while (true){
         prompt(command, args, m);
-        interns(command, args);
-        if(fork() != 0){
-            waitpid(-1, &status, 0);
-        }else{
-            read_command(command, args);
-        }
+        if(!interns(command, args)){
+            if(fork() != 0){
+                waitpid(-1, &status, 0);
+            }else{
+                read_command(command, args);
+            }
+        } 
     }
     
     return 0;
@@ -62,9 +63,18 @@ void read_command(char *command, char *args[]){
     perror("execvp");
 }
 
-void interns(char *command, char *args[]){
-    if(!strcmp(command, "exit")) { _exit(0); }
-    if(!strcmp(command, "cd")) { chdir(args[1]); }
+bool interns(char *command, char *args[]){
+    bool retorno = false;
+
+    if(!strcmp(command, "exit")) { 
+        _exit(0);
+        retorno = true; 
+    }else if(!strcmp(command, "cd")) { 
+        chdir(args[1]);
+        retorno = true;  
+    }
+
+    return retorno;
 }
 
 void get_username(Machine m){
