@@ -6,13 +6,16 @@ int main(){
     init(&commands);
 
     char string[MAX_ARGS];
-    char string2[MAX_ARGS];
-    char string3[MAX_ARGS];
+    char *args[MAX_ARGS];
+    /* char string2[MAX_ARGS];
+    char string3[MAX_ARGS]; */
 
     prompt();
     input(string);
+    filter_string(string, args);
+    externs(args);
 
-    prompt();
+    /* prompt();
     input(string2);
 
     prompt();
@@ -20,11 +23,11 @@ int main(){
 
     enqueue(commands, string);
     enqueue(commands, string2);
-    enqueue(commands, string3);
+    enqueue(commands, string3); */
     
-    for(int i = 0; i < 3; i++){
+    /* for(int i = 0; i < 3; i++){
         printf("dequeue: %s\n", dequeue(commands));
-    }
+    } */
 
     return 0;
 }

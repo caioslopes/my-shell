@@ -16,7 +16,7 @@ void input(char string[]);
 
 bool interns();
 
-void externs();
+void externs(char *args[]);
 
 void history();
 
@@ -28,5 +28,8 @@ char* get_hostname();
 struct tm* get_time();
 
 char* get_dir();
+
+/* Filters */
+void filter_string(char string[], char *args[]);
 
 char* filter_dir(char cwd[]);

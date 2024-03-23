@@ -11,8 +11,15 @@ void input(char* string){
     fflush(stdin);
 }
 
-void externs(){
-
+void externs(char *args[]){
+    int status;
+    if(fork() != 0){
+        waitpid(-1, &status, 0);
+    }else{
+        if(!execvp(args[0], args))
+            perror("execvp");
+            _exit(0);
+    }
 }
 
 /* Envoirment */
@@ -38,6 +45,23 @@ char* get_dir(){
     getcwd(cwd, sizeof(cwd));
     snprintf(c, BUFFER, "%s", filter_dir(cwd));
     return c;
+}
+
+/* Filters */
+
+void filter_string(char string[], char *args[]){
+    char *token;
+    int count = 0;
+
+    token = strtok(string, " ");
+
+    do {
+        args[count] = malloc(sizeof(char)*MAX_ARGS);
+        snprintf(args[count], MAX_ARGS, "%s", token);
+        count++;
+    } while ((token = strtok(NULL, " ")));
+
+    args[count] = NULL;
 }
 
 char* filter_dir(char cwd[]){
