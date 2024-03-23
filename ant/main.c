@@ -12,8 +12,11 @@ int main(){
     Machine m;
     m = malloc(sizeof(struct machine));
 
-    /* Command and Args */
-    char *command = malloc(sizeof(char)*MAX_LINE);
+    /* Queue */
+    Queue queue;
+    init(&queue);
+
+    /* Args */
     char *args[MAX_LINE];
     int status;
 
@@ -21,21 +24,21 @@ int main(){
     get_username(m);
 
     while (true){
-        prompt(command, args, m);
-        if(!interns(command, args)){
+        prompt(args, m, queue);
+        if(!interns(args[0], args, queue)){
             if(fork() != 0){
                 waitpid(-1, &status, 0);
             }else{
-                read_command(command, args);
+                read_command(args[0], args);
             }
-        } 
+        }
     }
     
     return 0;
 }
 
-void prompt(char *command, char *args[], Machine m){
-    char *token, string[MAX_LINE];
+void prompt(char *args[], Machine m, Queue q){
+    char string[MAX_LINE];
     int count = 0;
 
     get_time(m);
@@ -44,6 +47,13 @@ void prompt(char *command, char *args[], Machine m){
     printf("%s@%s[%d:%d:%d] %s $ ", m->username, m->hostname,m->time->tm_hour, m->time->tm_min, m->time->tm_sec, m->dir);
     fgets(string, MAX_LINE, stdin);
     fflush(stdin);
+    enqueue(q, string);
+    filter_string(string, args);
+}
+
+void filter_string(char string[], char *args[]){
+    char *token;
+    int count = 0;
 
     string[strcspn(string, "\n")] = 0;
 
@@ -55,7 +65,6 @@ void prompt(char *command, char *args[], Machine m){
     } while ((token = strtok(NULL, " ")));
 
     args[count] = NULL;
-    strcpy(command, args[0]);
 }
 
 void read_command(char *command, char *args[]){
@@ -64,7 +73,19 @@ void read_command(char *command, char *args[]){
         _exit(0);
 }
 
-bool interns(char *command, char *args[]){
+void history(Queue queue, char *args[]){
+    int s = get_size(queue);
+
+    for(int i = 0; i < s; i++){
+        char *aux;
+        aux = dequeue(queue);
+        printf("[%d]: %s\n", i + 1, aux);
+        enqueue(queue, aux);
+    }
+
+}
+
+bool interns(char *command, char *args[], Queue q){
     bool retorno = false;
 
     if(!strcmp(command, "exit")) { 
@@ -73,6 +94,8 @@ bool interns(char *command, char *args[]){
     }else if(!strcmp(command, "cd")) { 
         chdir(args[1]);
         retorno = true;  
+    }else if(!strcmp(command, "history")){
+        history(q, args);
     }
 
     return retorno;
@@ -88,8 +111,7 @@ void get_username(Machine m){
 }
 
 void get_userhost(Machine machine){
-    int hostid;
-    hostid = gethostname(machine->hostname, sizeof(machine->hostname));
+    gethostname(machine->hostname, sizeof(machine->hostname));
 }
 
 void get_time(Machine m){

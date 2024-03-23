@@ -1,0 +1,50 @@
+#include "../lib/shell.h"
+
+void prompt(){
+    struct tm *time = get_time();
+    printf("%s@%s[%d:%d:%d] %s $ ", get_username(), get_hostname(), time->tm_hour, time->tm_min, time->tm_sec, get_dir());
+}
+
+void input(char* string){
+    fgets(string, MAX_ARGS, stdin);
+    string[strcspn(string, "\n")] = 0;
+    fflush(stdin);
+}
+
+void externs(){
+
+}
+
+/* Envoirment */
+
+char* get_username(){
+    return getenv("USER");
+}
+
+char* get_hostname(){
+    char* host = malloc(sizeof(char) * BUFFER);
+    gethostname(host, BUFFER);
+    return host;
+}
+
+struct tm* get_time(){
+    time_t now = time(NULL);
+    struct tm *tm_struct = localtime(&now);
+    return tm_struct;
+}
+
+char* get_dir(){
+    char cwd[BUFFER], *c = malloc(sizeof(char) * BUFFER);
+    getcwd(cwd, sizeof(cwd));
+    snprintf(c, BUFFER, "%s", filter_dir(cwd));
+    return c;
+}
+
+char* filter_dir(char cwd[]){
+    char *token, *c;
+    token = strtok(cwd, "/");
+    do {
+        snprintf(c, BUFFER, "%s", token);
+    } while ((token = strtok(NULL, "/")));
+    return c;
+}

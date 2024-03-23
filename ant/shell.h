@@ -6,16 +6,21 @@
 #include <pwd.h>
 #include <string.h>
 #include <time.h>
+#include "queue.h"
 
 #define MAX_LINE 1024
 
 typedef struct machine* Machine;
 
-void prompt(char *command, char *args[], Machine m);
+void prompt(char *args[], Machine m, Queue q);
+
+void filter_string(char string[], char *args[]);
 
 void read_command(char *command, char *args[]);
 
-bool interns(char *command, char *args[]);
+void history(Queue queue, char *args[]);
+
+bool interns(char *command, char *args[], Queue q);
 
 void get_username(Machine m);
 
