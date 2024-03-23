@@ -14,11 +14,11 @@ void prompt();
 
 void input(char string[]);
 
-bool interns();
+bool interns(char *args[], Queue commands);
 
 void externs(char *args[]);
 
-void history();
+void history(Queue commands);
 
 /* Envoirment */
 char* get_username();

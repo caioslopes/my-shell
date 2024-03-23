@@ -22,6 +22,34 @@ void externs(char *args[]){
     }
 }
 
+bool interns(char *args[], Queue commands){
+    bool retorno = false;
+
+    if(!strcmp(args[0], "exit")) { 
+        _exit(0);
+        retorno = true; 
+    }else if(!strcmp(args[0], "cd")) { 
+        chdir(args[1]);
+        retorno = true;  
+    }else if(!strcmp(args[0], "history")){
+        history(commands);
+        retorno = true;
+    }
+    
+    return retorno;
+}
+
+void history(Queue commands){
+    int size = get_size(commands);
+
+    for(int i = 0; i < size; i++){
+        char *aux;
+        aux = dequeue(commands);
+        enqueue(commands, aux);
+        printf("%d: %s\n", i+1, aux);
+    }
+}
+
 /* Envoirment */
 
 char* get_username(){

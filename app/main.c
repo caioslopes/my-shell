@@ -5,29 +5,21 @@ int main(){
     Queue commands;
     init(&commands);
 
-    char string[MAX_ARGS];
-    char *args[MAX_ARGS];
-    /* char string2[MAX_ARGS];
-    char string3[MAX_ARGS]; */
+    while(true){
+        char *string = malloc(sizeof(char) * BUFFER);
+        char *args[MAX_ARGS];
 
-    prompt();
-    input(string);
-    filter_string(string, args);
-    externs(args);
+        prompt();
+        input(string);
+        
+        filter_string(string, args);
 
-    /* prompt();
-    input(string2);
+        enqueue(commands, string);
 
-    prompt();
-    input(string3);
-
-    enqueue(commands, string);
-    enqueue(commands, string2);
-    enqueue(commands, string3); */
-    
-    /* for(int i = 0; i < 3; i++){
-        printf("dequeue: %s\n", dequeue(commands));
-    } */
+        if(!interns(args, commands)){
+            externs(args);
+        }
+    }
 
     return 0;
 }

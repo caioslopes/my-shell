@@ -50,7 +50,7 @@ bool enqueue(Queue queue, Element element)
 
 Element dequeue(Queue queue)
 {
-    Element answer = NULL;
+    Element answer = "";
     if (!is_empty(queue))
     {
         if (queue->first == QUEUE_MAX_SIZE - 1)
