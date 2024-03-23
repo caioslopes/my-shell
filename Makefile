@@ -2,7 +2,7 @@
 
 SRC = ./app/main.c ./app/src/*.c
 
-NAME = ourShell
+NAME = my-shell
 
 CC = gcc
 
