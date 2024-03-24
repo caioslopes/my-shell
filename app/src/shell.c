@@ -1,28 +1,10 @@
-#include "../lib/shell.h"
+#include "shell.h"
 
-/* Alias */
-struct alias
-{
-    char *nickname;
-    char *string;
-};
-
-
-void init_alias(Alias *alias){
-    Alias a;
-    a = malloc(sizeof(alias));
-    a->nickname = malloc(sizeof(char)*BUFFER);
-    a->string = malloc(sizeof(char)*BUFFER);
-    *alias = a;
-}
-
-void save_alias(char *args[]){
+void save_alias(char *args[], List l){
     Alias a;
     init_alias(&a);
     filter_alias(args, a);
-
-    printf("nickname: %s\n", a->nickname);
-    printf("string: %s\n", a->string);
+    insert_end_list(l, a);
 }
 
 /* Shell */
@@ -31,9 +13,11 @@ void prompt(){
     printf("%s@%s[%d:%d:%d] %s $ ", get_username(), get_hostname(), time->tm_hour, time->tm_min, time->tm_sec, get_dir());
 }
 
-void interpret(char *args[], Queue commands){
-    if(!interns(args, commands)){
-        externs(args);
+void interpret(char *args[], Queue commands, List alias){
+    if(!interns(args, commands, alias)){
+        if(!aliases(args, commands, alias)){
+            externs(args);
+        }
     }
 }
 
@@ -54,27 +38,41 @@ void externs(char *args[]){
     }
 }
 
-bool interns(char *args[], Queue commands){
-    bool retorno = false;
+bool interns(char *args[], Queue commands, List alias){
+    bool answer = false;
 
     if(!strcmp(args[0], "exit")) { 
         _exit(0);
-        retorno = true; 
+        answer = true; 
     }else if(!strcmp(args[0], "cd")) { 
         chdir(args[1]);
-        retorno = true;  
+        answer = true;  
     }else if(!strcmp(args[0], "history")){
-        history(commands);
-        retorno = true;
+        history(commands, alias);
+        answer = true;
     }else if(!strcmp(args[0], "alias")){
-        save_alias(args);
-        retorno = true;
+        save_alias(args, alias);
+        answer = true;
     }
     
-    return retorno;
+    return answer;
 }
 
-void history(Queue commands){
+bool aliases(char *args[], Queue commands, List alias){
+    bool answer = false;
+    if(!is_empty_list(alias)){
+        Typeinfo a = get_info(alias, args[0]);
+        if(a != NULL){
+            char *args_aux[MAX_ARGS];
+            filter_string(get_string(a), args_aux);
+            interpret(args_aux, commands, alias);
+            answer = true;
+        }
+    }
+    return answer;
+}
+
+void history(Queue commands, List alias){
     int size = get_size(commands);
 
     for(int i = 0; i < size; i++){
@@ -100,7 +98,7 @@ void history(Queue commands){
         if(i == n-1){
             filter_string(aux, args);
             enqueue(commands, aux);
-            interpret(args, commands);
+            interpret(args, commands, alias);
         }
     }
     
@@ -164,7 +162,8 @@ void filter_alias(char *args[], Alias alias){
     token = strtok(args[1], "=");
     do {
         if(!count){
-            snprintf(alias->nickname, BUFFER, "%s", token);
+            set_nickname(alias, token);
+            /* snprintf(alias->nickname, BUFFER, "%s", token); */
         }else{
             strcat(temp, token);
         }
@@ -178,6 +177,7 @@ void filter_alias(char *args[], Alias alias){
 
     token = strtok(temp, "\"");
     do{
-        snprintf(alias->string, BUFFER, "%s", token);
+        set_string(alias, token);
+        /* snprintf(alias->string, BUFFER, "%s", token); */
     }while((token = strtok(NULL, "\"")));
 }

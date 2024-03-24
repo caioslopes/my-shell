@@ -5,6 +5,9 @@ int main(){
     Queue commands;
     init(&commands);
 
+    List alias;
+    init_list(&alias);
+
     while(true){
         char *string = malloc(sizeof(char) * BUFFER);
         char *args[MAX_ARGS];
@@ -16,7 +19,7 @@ int main(){
 
         enqueue(commands, string);
         
-        interpret(args, commands);
+        interpret(args, commands, alias);
     }
 
     return 0;

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+/* Queue */
 #define QUEUE_MAX_SIZE 10
 
 typedef char* Element;

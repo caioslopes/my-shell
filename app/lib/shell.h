@@ -6,29 +6,29 @@
 #include <string.h>
 #include <time.h>
 #include "queue.h"
+#include "alias.h"
+#include "list.h"
 
 #define MAX_ARGS 200
 #define BUFFER 200
 
 /* Alias */
-typedef struct alias* Alias;
-
-void init_alias(Alias *alias);
-
-void save_alias(char *args[]);
+void save_alias(char *args[], List alias);
 
 /* Shell */
 void prompt();
 
 void input(char *string);
 
-void interpret(char *args[], Queue commands);
+void interpret(char *args[], Queue commands, List alias);
 
-bool interns(char *args[], Queue commands);
+bool interns(char *args[], Queue commands, List alias);
 
 void externs(char *args[]);
 
-void history(Queue commands);
+bool aliases(char *args[], Queue commands, List alias);
+
+void history(Queue commands, List alias);
 
 /* Envoirment */
 char* get_username();
