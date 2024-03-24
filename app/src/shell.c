@@ -5,6 +5,12 @@ void prompt(){
     printf("%s@%s[%d:%d:%d] %s $ ", get_username(), get_hostname(), time->tm_hour, time->tm_min, time->tm_sec, get_dir());
 }
 
+void interpret(char *args[], Queue commands){
+    if(!interns(args, commands)){
+        externs(args);
+    }
+}
+
 void input(char* string){
     fgets(string, MAX_ARGS, stdin);
     string[strcspn(string, "\n")] = 0;
@@ -46,8 +52,30 @@ void history(Queue commands){
         char *aux;
         aux = dequeue(commands);
         enqueue(commands, aux);
-        printf("%d: %s\n", i+1, aux);
+        printf("%d  %s\n", i+1, aux);
     }
+
+    char *string = malloc(sizeof(char) * BUFFER);
+    prompt();
+    input(string);
+
+    string = strtok(string, "!");
+    int n = atoi(string);
+
+    char *args[BUFFER];
+
+    for(int i = 0; i < size && i != n; i++){
+        char *aux;
+        aux = dequeue(commands);
+        enqueue(commands, aux);
+        if(i == n-1){
+            filter_string(aux, args);
+            enqueue(commands, aux);
+            interpret(args, commands);
+        }
+    }
+
+    
 }
 
 /* Envoirment */
@@ -77,11 +105,13 @@ char* get_dir(){
 
 /* Filters */
 
-void filter_string(char string[], char *args[]){
-    char *token;
+void filter_string(char *string, char *args[]){
+    char *token, *temp = malloc(sizeof(char) * BUFFER);
     int count = 0;
 
-    token = strtok(string, " ");
+    strcpy(temp, string);
+
+    token = strtok(temp, " ");
 
     do {
         args[count] = malloc(sizeof(char)*MAX_ARGS);

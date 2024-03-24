@@ -15,10 +15,8 @@ int main(){
         filter_string(string, args);
 
         enqueue(commands, string);
-
-        if(!interns(args, commands)){
-            externs(args);
-        }
+        
+        interpret(args, commands);
     }
 
     return 0;

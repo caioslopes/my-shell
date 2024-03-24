@@ -35,15 +35,17 @@ bool enqueue(Queue queue, Element element)
 {
     bool answer = false;
 
-    if (queue->last == QUEUE_MAX_SIZE - 1){
-        queue->last = 0;
-    } else {
-        queue->last += 1;
-    }
+    if(!is_full(queue)){
+        if (queue->last == QUEUE_MAX_SIZE - 1){
+            queue->last = 0;
+        } else {
+            queue->last += 1;
+        }
 
-    queue->items[queue->last] = element;
-    queue->size += 1;
-    answer = true;
+        queue->items[queue->last] = element;
+        queue->size += 1;
+        answer = true;
+    }
 
     return answer;
 }

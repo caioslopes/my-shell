@@ -12,7 +12,9 @@
 
 void prompt();
 
-void input(char string[]);
+void input(char *string);
+
+void interpret(char *args[], Queue commands);
 
 bool interns(char *args[], Queue commands);
 
@@ -30,6 +32,6 @@ struct tm* get_time();
 char* get_dir();
 
 /* Filters */
-void filter_string(char string[], char *args[]);
+void filter_string(char *string, char *args[]);
 
 char* filter_dir(char cwd[]);
