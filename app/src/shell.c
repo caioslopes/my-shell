@@ -1,5 +1,31 @@
 #include "../lib/shell.h"
 
+/* Alias */
+struct alias
+{
+    char *nickname;
+    char *string;
+};
+
+
+void init_alias(Alias *alias){
+    Alias a;
+    a = malloc(sizeof(alias));
+    a->nickname = malloc(sizeof(char)*BUFFER);
+    a->string = malloc(sizeof(char)*BUFFER);
+    *alias = a;
+}
+
+void save_alias(char *args[]){
+    Alias a;
+    init_alias(&a);
+    filter_alias(args, a);
+
+    printf("nickname: %s\n", a->nickname);
+    printf("string: %s\n", a->string);
+}
+
+/* Shell */
 void prompt(){
     struct tm *time = get_time();
     printf("%s@%s[%d:%d:%d] %s $ ", get_username(), get_hostname(), time->tm_hour, time->tm_min, time->tm_sec, get_dir());
@@ -40,6 +66,9 @@ bool interns(char *args[], Queue commands){
     }else if(!strcmp(args[0], "history")){
         history(commands);
         retorno = true;
+    }else if(!strcmp(args[0], "alias")){
+        save_alias(args);
+        retorno = true;
     }
     
     return retorno;
@@ -74,12 +103,10 @@ void history(Queue commands){
             interpret(args, commands);
         }
     }
-
     
 }
 
 /* Envoirment */
-
 char* get_username(){
     return getenv("USER");
 }
@@ -104,7 +131,6 @@ char* get_dir(){
 }
 
 /* Filters */
-
 void filter_string(char *string, char *args[]){
     char *token, *temp = malloc(sizeof(char) * BUFFER);
     int count = 0;
@@ -129,4 +155,29 @@ char* filter_dir(char cwd[]){
         snprintf(c, BUFFER, "%s", token);
     } while ((token = strtok(NULL, "/")));
     return c;
+}
+
+void filter_alias(char *args[], Alias alias){
+    char *token, *temp = malloc(sizeof(char)*BUFFER);
+    int count = 0;
+    
+    token = strtok(args[1], "=");
+    do {
+        if(!count){
+            snprintf(alias->nickname, BUFFER, "%s", token);
+        }else{
+            strcat(temp, token);
+        }
+        count++;
+    } while ((token = strtok(NULL, "=")));
+
+    for(int i = 2; args[i] != NULL; i++){
+        strcat(temp, " ");
+        strcat(temp, args[i]);
+    }
+
+    token = strtok(temp, "\"");
+    do{
+        snprintf(alias->string, BUFFER, "%s", token);
+    }while((token = strtok(NULL, "\"")));
 }

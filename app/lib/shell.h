@@ -10,6 +10,14 @@
 #define MAX_ARGS 200
 #define BUFFER 200
 
+/* Alias */
+typedef struct alias* Alias;
+
+void init_alias(Alias *alias);
+
+void save_alias(char *args[]);
+
+/* Shell */
 void prompt();
 
 void input(char *string);
@@ -35,3 +43,5 @@ char* get_dir();
 void filter_string(char *string, char *args[]);
 
 char* filter_dir(char cwd[]);
+
+void filter_alias(char *args[], Alias alias);
