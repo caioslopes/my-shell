@@ -1,12 +1,6 @@
-/*
- * File:   main.c
- * Author(s): Augusto G Serrano, Caio S Lopes. 
- *
- * Created on 20 de março de 2024.
- * 
- */
-
 #include "lib/shell.h"
+
+void insert_queue(Queue commands, char *string);
 
 int main(){
 
@@ -25,10 +19,15 @@ int main(){
         
         filter_string(string, args, " ");
 
-        enqueue(commands, string);
+        insert_queue(commands, string);
 
         interpret(string, args, commands, alias);
     }
 
     return 0;
+}
+
+void insert_queue(Queue commands, char *string){
+    if(is_full(commands)){ dequeue(commands); }
+    enqueue(commands, string);
 }

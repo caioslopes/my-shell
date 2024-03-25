@@ -1,4 +1,7 @@
 #Makefile compiler
+# File:   main.c
+# Author(s): Augusto G Serrano, Caio S Lopes. 
+# Created on 20 de março de 2024.
 
 SRC = ./app/main.c ./app/src/*.c
 

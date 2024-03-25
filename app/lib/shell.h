@@ -1,11 +1,3 @@
-/*
- * File:   shell.h
- * Author(s): Augusto G Serrano, Caio S Lopes. 
- *
- * Created on 20 de março de 2024.
- * 
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
