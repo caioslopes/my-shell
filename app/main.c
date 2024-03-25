@@ -15,11 +15,11 @@ int main(){
         prompt();
         input(string);
         
-        filter_string(string, args);
+        filter_string(string, args, " ");
 
         enqueue(commands, string);
-        
-        interpret(args, commands, alias);
+
+        interpret(string, args, commands, alias);
     }
 
     return 0;

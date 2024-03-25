@@ -13,10 +13,14 @@ void prompt(){
     printf("%s@%s[%d:%d:%d] %s $ ", get_username(), get_hostname(), time->tm_hour, time->tm_min, time->tm_sec, get_dir());
 }
 
-void interpret(char *args[], Queue commands, List alias){
+void interpret(char *string, char *args[], Queue commands, List alias){
     if(!interns(args, commands, alias)){
         if(!aliases(args, commands, alias)){
-            externs(args);
+            if(hasRedirect(string)){
+                redirect(string, args);
+            }else{
+                externs(args);
+            }
         }
     }
 }
@@ -64,8 +68,8 @@ bool aliases(char *args[], Queue commands, List alias){
         Typeinfo a = get_info(alias, args[0]);
         if(a != NULL){
             char *args_aux[MAX_ARGS];
-            filter_string(get_string(a), args_aux);
-            interpret(args_aux, commands, alias);
+            filter_string(get_string(a), args_aux, " ");
+            interpret(get_string(a), args_aux, commands, alias);
             answer = true;
         }
     }
@@ -96,12 +100,44 @@ void history(Queue commands, List alias){
         aux = dequeue(commands);
         enqueue(commands, aux);
         if(i == n-1){
-            filter_string(aux, args);
+            filter_string(aux, args, " ");
             enqueue(commands, aux);
-            interpret(args, commands, alias);
+            interpret(string, args, commands, alias);
         }
     }
     
+}
+
+bool hasRedirect(char *string){ 
+    return strchr(string, '>') != NULL;
+}
+
+int redirect(char *string, char *args[]){
+    filter_string(string, args, ">");
+
+    char *filename = malloc(sizeof(char)*BUFFER);
+    strcpy(filename, args[1]);
+    filename++;
+
+    int out = open(filename, O_RDWR|O_CREAT|O_APPEND, 0600);
+    if (-1 == out) { perror("opening cout.log"); return 255; }
+
+    int save_out = dup(fileno(stdout));
+
+    if (-1 == dup2(out, fileno(stdout))) { perror("cannot redirect stdout"); return 255; }
+
+    char *down_args[MAX_ARGS];
+    filter_string(args[0], down_args, " ");
+
+    externs(down_args);
+
+    fflush(stdout); close(out);
+
+    dup2(save_out, fileno(stdout));
+
+    close(save_out);
+
+    return 0;
 }
 
 /* Envoirment */
@@ -129,19 +165,19 @@ char* get_dir(){
 }
 
 /* Filters */
-void filter_string(char *string, char *args[]){
+void filter_string(char *string, char *args[], char *caracter){
     char *token, *temp = malloc(sizeof(char) * BUFFER);
     int count = 0;
 
     strcpy(temp, string);
 
-    token = strtok(temp, " ");
+    token = strtok(temp, caracter);
 
     do {
         args[count] = malloc(sizeof(char)*MAX_ARGS);
         snprintf(args[count], MAX_ARGS, "%s", token);
         count++;
-    } while ((token = strtok(NULL, " ")));
+    } while ((token = strtok(NULL, caracter)));
 
     args[count] = NULL;
 }
