@@ -14,11 +14,11 @@ void prompt(){
 }
 
 void interpret(char *string, char *args[], Queue commands, List alias){
-    if(!interns(args, commands, alias)){
-        if(!aliases(args, commands, alias)){
-            if(hasRedirect(string)){
-                redirect(string, args);
-            }else{
+    if(hasRedirect(string)){
+        redirect(string, args, commands, alias);
+    }else{
+        if(!interns(args, commands, alias)){
+            if(!aliases(args, commands, alias)){
                 externs(args);
             }
         }
@@ -112,7 +112,7 @@ bool hasRedirect(char *string){
     return strchr(string, '>') != NULL;
 }
 
-int redirect(char *string, char *args[]){
+int redirect(char *string, char *args[],  Queue commands, List alias){
     filter_string(string, args, ">");
 
     char *filename = malloc(sizeof(char)*BUFFER);
@@ -129,7 +129,7 @@ int redirect(char *string, char *args[]){
     char *down_args[MAX_ARGS];
     filter_string(args[0], down_args, " ");
 
-    externs(down_args);
+    interpret(args[0], down_args, commands, alias);
 
     fflush(stdout); close(out);
 

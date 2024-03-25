@@ -33,7 +33,7 @@ void history(Queue commands, List alias);
 
 bool hasRedirect(char *string);
 
-int redirect(char *string, char *args[]);
+int redirect(char *string, char *args[],  Queue commands, List alias);
 
 /* Envoirment */
 char* get_username();
