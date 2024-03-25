@@ -191,7 +191,7 @@ void filter_string(char *string, char *args[], char *caracter){
 }
 
 char* filter_dir(char cwd[]){
-    char *token, *c;
+    char *token, *c = malloc(sizeof(char) * BUFFER);
     token = strtok(cwd, "/");
 
     if(token == NULL){
