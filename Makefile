@@ -5,11 +5,20 @@
 
 SRC = ./app/main.c ./app/src/*.c
 
+SOURCE = 	./app/main.c \
+			./app/src/alias.c \
+			./app/src/list.c \
+			./app/src/queue.c \
+			./app/src/shell.c \
+
 NAME = my-shell
 
 CC = gcc
 
-LIBRARY_PATH	= 	-I./app/lib/
+LIB	= 	-I./app/lib/
 
 macos	: 	$(SRC)
-			$(CC) $(SRC) $(LIBRARY_PATH) -o $(NAME)
+				$(CC) $(SRC) $(LIB) -o $(NAME)
+
+linux	: 
+			$(CC) -o $(NAME) $(SOURCE) $(LIB)
