@@ -185,6 +185,11 @@ void filter_string(char *string, char *args[], char *caracter){
 char* filter_dir(char cwd[]){
     char *token, *c;
     token = strtok(cwd, "/");
+
+    if(token == NULL){
+        return "/";
+    }
+
     do {
         snprintf(c, BUFFER, "%s", token);
     } while ((token = strtok(NULL, "/")));
