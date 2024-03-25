@@ -1,3 +1,11 @@
+/*
+ * File:   shell.c
+ * Author(s): Augusto G Serrano, Caio S Lopes. 
+ *
+ * Created on 23 de março de 2024.
+ * 
+ */
+
 #include "shell.h"
 
 void save_alias(char *args[], List l){

@@ -1,3 +1,11 @@
+/*
+ * File:   main.c
+ * Author(s): Augusto G Serrano, Caio S Lopes. 
+ *
+ * Created on 23 de março de 2024.
+ * 
+ */
+
 #include "lib/shell.h"
 
 int main(){
