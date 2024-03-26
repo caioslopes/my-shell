@@ -88,10 +88,13 @@ O projeto foi concluído cumprindo todos os tópicos requisitados e o desafio (t
 - No terminal (precisa estar dentro da pasta my-shell) rode o comando abaixo:
 
 Para linux:
-> $ make linux
-
+```
+$ make linux
+```
 Para macos:
-> % make macos
+```
+% make macos
+```
 
 # Integrantes
 
