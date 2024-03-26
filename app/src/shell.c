@@ -103,17 +103,21 @@ void history(Queue commands, List alias){
 
     char *args[BUFFER];
 
-    for(int i = 0; i < size && i != n; i++){
+    char *find; //find index
+    for(int i = 0; i < size; i++){
         char *aux;
         aux = dequeue(commands);
         enqueue(commands, aux);
         if(i == n-1){
             filter_string(aux, args, " ");
-            enqueue(commands, aux);
             interpret(string, args, commands, alias);
+            find = aux;
         }
     }
-    
+
+    if(find != NULL){
+        enqueue(commands, find);
+    }
 }
 
 bool hasRedirect(char *string){ 
