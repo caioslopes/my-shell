@@ -81,6 +81,18 @@ A função realiza as verificações necessárias e filtra a string para ser pas
 
 O projeto foi concluído cumprindo todos os tópicos requisitados e o desafio (tópico extra). A principal dificuldade do projeto foi a manipulação de strings, na qual era preciso lidar com ponteiros de diversos níveis diferentes. Também tivemos contato com novas chamadas de sistema, o dup e o dup2, já descritas neste texto.
 
+# Executando o programa
+
+- Clone o projeto no seu computador
+- Acesse a pasta my-shell
+- No terminal (precisa estar dentro da pasta my-shell) rode o comando abaixo:
+
+Para linux:
+> $ make linux
+
+Para macos:
+> % make macos
+
 # Integrantes
 
 - Augusto G. Serrano
