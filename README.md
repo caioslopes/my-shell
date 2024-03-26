@@ -12,6 +12,9 @@ Projeto referente a disciplina Sistemas Operacionais 3º Semestre (2024) - ARQSS
 - Implementação do comando interno history.
 O comando history deve exibir o histórico dos últimos N=10 comandos, numerados de 1 a N. O usuário pode repetir um desses comandos digitando a expressão !n , seguida de Enter, onde n é o número de um comando no histórico.
 
+Extras
+Como um desafio extra, implemente a funcionalidade de redirecionamento de saída de comandos (operador > ).
+
 # Desenvolvimento
 
 O desenvolvimento foi iniciado a partir da execução das chamadas de sistema (comandos externos), que consistia em coletar o comando digitado pelo usuário (input) e filtrar os dados para utilizá-los na função execvp().
