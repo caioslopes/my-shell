@@ -29,7 +29,7 @@ bool interns(char *args[], Queue commands, List alias);
 
 void externs(char *args[]);
 
-bool aliases(char *args[], Queue commands, List alias);
+bool aliases(char *string, char *args[], Queue commands, List alias);
 
 void history(Queue commands, List alias);
 

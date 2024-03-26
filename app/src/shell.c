@@ -22,15 +22,17 @@ void prompt(){
 }
 
 void interpret(char *string, char *args[], Queue commands, List alias){
-    if(hasRedirect(string)){
-        redirect(string, args, commands, alias);
-    }else{
-        if(!interns(args, commands, alias)){
-            if(!aliases(args, commands, alias)){
+   
+    if(!interns(args, commands, alias)){
+        if(!aliases(string, args, commands, alias)){
+            if(hasRedirect(string)){
+                redirect(string, args, commands, alias);
+            }else{
                 externs(args);
             }
         }
     }
+    
 }
 
 void input(char* string){
@@ -70,14 +72,27 @@ bool interns(char *args[], Queue commands, List alias){
     return answer;
 }
 
-bool aliases(char *args[], Queue commands, List alias){
+bool aliases(char *string, char *args[], Queue commands, List alias){
     bool answer = false;
     if(!is_empty_list(alias)){
         Typeinfo a = get_info(alias, args[0]);
         if(a != NULL){
+            char *string_aux;
+            
+            for(int i = 0; i < strlen(args[0])+1; i++){
+                string++;
+            }
+
+            strcat(string_aux, get_string(a));
+
+            if(string != NULL){
+                strcat(string_aux, " ");
+                strcat(string_aux, string);
+            }
+
             char *args_aux[MAX_ARGS];
-            filter_string(get_string(a), args_aux, " ");
-            interpret(get_string(a), args_aux, commands, alias);
+            filter_string(string_aux, args_aux, " ");
+            interpret(string_aux, args_aux, commands, alias);
             answer = true;
         }
     }
