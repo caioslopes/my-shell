@@ -24,7 +24,7 @@ O primeiro desafio enfrentado foi a filtragem da string. Na linguagem C, a strin
 Para lidar com a string, foram utilizados ponteiros de caracteres (char *) e vetores de ponteiros de caracteres (char *vetor[]).
 
 Em seguida, foi necessário ter os argumentos no tipo correto para passá-los como parâmetro para a função execvp(). Para obter esse resultado, foi utilizada a função filter_string(char *string, char *args[], char *caracter), que recebe como argumentos o ponteiro de uma string, um vetor de ponteiros de caracteres e novamente o ponteiro de uma string.
-| Parametro | Representa |
+| Parametro | Descrição |
 | --- | --- |
 | char *string | é o input do usuário |
 | char *args[] | é o vetor que irá armazenar os argumentos necessários para a função execvp() |
