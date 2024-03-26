@@ -1,6 +1,7 @@
 # Projeto
 
 O objetivo do projeto é desenvolver um interpretador de comandos shell utilizando a linguagem de programação C.
+Projeto referente a disciplina Sistemas Operacionais 3º Semestre (2024) - ARQSSOS.
 
 ## Requisitos
 
