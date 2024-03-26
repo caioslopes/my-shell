@@ -147,7 +147,7 @@ int redirect(char *string, char *args[],  Queue commands, List alias){
     filename++;
 
     int out = open(filename, O_RDWR|O_CREAT|O_APPEND, 0600);
-    if (-1 == out) { perror("opening cout.log"); return 255; }
+    if (-1 == out) { perror("cannot openning file"); return 255; }
 
     int save_out = dup(fileno(stdout));
 
