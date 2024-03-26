@@ -69,7 +69,7 @@ bool aliases(char *string, char *args[], Queue commands, List alias){
     if(!is_empty_list(alias)){
         Typeinfo a = get_info(alias, args[0]);
         if(a != NULL){
-            char *string_aux;
+            char *string_aux = malloc(sizeof(char)*BUFFER);
             
             for(int i = 0; i < strlen(args[0])+1; i++){
                 string++;
