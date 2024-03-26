@@ -73,15 +73,6 @@ Entendendo esse fluxo, podemos retomar as funções dup() e dup2().
 - Utiliza-se dup para armazenar a saída padrão para depois reatribuí-la à posição 0.
 - Utiliza-se dup2 para reatribuir a saída padrão de volta ao programa.
 
-Fluxo que executamos no programa:
-```mermaid
-graph TD;
-    new_out \= file;
-    save_out \= dup(1)-->saveout \= stdout;
-    dup2(new_out, 1)-->1: file;
-    dup2(save_out, 1)-->1: stdout
-```
-
 Para executar todo esse fluxo descrito acima utiliza-se da função redirect(char *string, char *args[], Queue commands, List alias), que recebe a string já testada pela função hasRedirect(char *string) - função que verifica se na string existe o operador de redirecionamento ‘>’ -, o vetor de argumentos, a fila de comandos e a lista de aliases.
 
 A função realiza as verificações necessárias e filtra a string para ser passada à função interpret() que irá executar o comando.
