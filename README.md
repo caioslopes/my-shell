@@ -24,9 +24,11 @@ O primeiro desafio enfrentado foi a filtragem da string. Na linguagem C, a strin
 Para lidar com a string, foram utilizados ponteiros de caracteres (char *) e vetores de ponteiros de caracteres (char *vetor[]).
 
 Em seguida, foi necessário ter os argumentos no tipo correto para passá-los como parâmetro para a função execvp(). Para obter esse resultado, foi utilizada a função filter_string(char *string, char *args[], char *caracter), que recebe como argumentos o ponteiro de uma string, um vetor de ponteiros de caracteres e novamente o ponteiro de uma string.
-- char *string: é o input do usuário;
-- char *args[]: é o vetor que irá armazenar os argumentos necessários para a função execvp();
-- char *caracter: é o caractere que se deseja filtrar na string passada no primeiro argumento.
+| Parametro | Representa |
+| --- | --- |
+| char *string | é o input do usuário |
+| char *args[] | é o vetor que irá armazenar os argumentos necessários para a função execvp() |
+| char *caracter | é o caracter que se deseja filtrar na string passada no primeiro argumento |
 
 Após receber os parâmetros necessários, é feita a filtragem. Foi utilizada a função strtok(), que recebe como parâmetros a string que será quebrada e o caracter de separação. Esse caracter será procurado em toda a string e, se encontrado, a string será quebrada em duas partes, e assim sucessivamente.
 
@@ -51,20 +53,25 @@ Para desenvolver esse desafio, foi necessário entender como funcionam as funç�
 Antes de explicar o que cada função faz, é importante abordar o fluxo do file descriptor (fd).
 
 Ao executar um arquivo, temos uma tabela que representa as entradas e saídas do mesmo:
-| Id | Represents |
+| Id | E/S |
 | --- | --- |
 | 0 | stdin|
 | 1 | stdout |
 | 2 | stderr |
 
+É possível alterar as E/S e isso será feito adiante.
+
 Por padrão, o sistema irá coletar as entradas (stdin) da entrada padrão do sistema (normalmente o teclado) e redirecionar as saídas (stdout) para a saída padrão do sistema (normalmente a tela). Porém, antes de ser encaminhada para a tela, essa saída é armazenada em um buffer. E, por fim, o stderr redireciona a saída de erro diretamente para a tela e depois a armazena em um buffer.
 
 Entendendo esse fluxo, podemos retomar as funções dup() e dup2().
 
-Dup(int oldfd): Recebe um valor inteiro, que representa uma entrada ou saída registrada na tabela do arquivo e retorna a referencia da entrada ou saída inserida. Em nosso contexto, é usada para armazenar a saída padrão para depois reatribuí-la à posição 0.
+| Função | Descrição |
+| --- | --- |
+| dup(int oldfd) | Recebe um valor inteiro, que representa uma entrada ou saída registrada na tabela do arquivo e retorna a referencia da entrada ou saída inserida. |
+| dup2(int oldfd, int newfd) | Recebe dois valores inteiros, a função atribui o valor de oldfd a newfd. |
 
-Dup2(int oldfd, int newfd): Recebe dois valores inteiros, a função atribui o valor de oldfd a newfd.
-Em nosso contexto, utilizamos a função dup2 para reatribuir a saída padrão de volta ao programa.
+- Utiliza-se dup para armazenar a saída padrão para depois reatribuí-la à posição 0.
+- Utiliza-se dup2 para reatribuir a saída padrão de volta ao programa.
 
 Para executar todo esse fluxo descrito acima utiliza-se da função redirect(char *string, char *args[], Queue commands, List alias), que recebe a string já testada pela função hasRedirect(char *string) - função que verifica se na string existe o operador de redirecionamento ‘>’ -, o vetor de argumentos, a fila de comandos e a lista de aliases.
 
