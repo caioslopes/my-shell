@@ -1,4 +1,4 @@
-#include "lib/shell.h"
+#include "shell.h"
 
 void insert_queue(Queue commands, char *string);
 
