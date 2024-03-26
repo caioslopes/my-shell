@@ -76,8 +76,8 @@ Entendendo esse fluxo, podemos retomar as funções dup() e dup2().
 Fluxo que executamos no programa:
 ```mermaid
 graph TD;
-    int new_out = file;
-    int save_out = dup(1)-->saveout = stdout;
+    new_out = file;
+    save_out = dup(1)-->saveout = stdout;
     dup2(new_out, 1)-->1: file;
     dup2(save_out, 1)-->1: stdout
 ```
