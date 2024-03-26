@@ -51,9 +51,11 @@ Para desenvolver esse desafio, foi necessário entender como funcionam as funç�
 Antes de explicar o que cada função faz, é importante abordar o fluxo do file descriptor (fd).
 
 Ao executar um arquivo, temos uma tabela que representa as entradas e saídas do mesmo:
-0 - stdin
-1 - stdout
-2 - stderr
+| Id | Represents |
+| --- | --- |
+| 0 | stdin|
+| 1 | stdout |
+| 2 | stderr |
 
 Por padrão, o sistema irá coletar as entradas (stdin) da entrada padrão do sistema (normalmente o teclado) e redirecionar as saídas (stdout) para a saída padrão do sistema (normalmente a tela). Porém, antes de ser encaminhada para a tela, essa saída é armazenada em um buffer. E, por fim, o stderr redireciona a saída de erro diretamente para a tela e depois a armazena em um buffer.
 
